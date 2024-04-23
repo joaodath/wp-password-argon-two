@@ -5,7 +5,7 @@
  * Description: Securely store WordPress user passwords in database with Argon2id hashing and SHA-512 HMAC using PHP's native functions.
  * Author:      @joaodath
  * Author URI:  https://joaodath.com.br
- * Version:     0.2.2
+ * Version:     0.3.0
  * Licence:     MIT
  */
 
