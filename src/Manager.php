@@ -7,7 +7,7 @@ namespace TypistTech\WPPasswordArgonTwo;
 class Manager
 {
     /**
-     * The main Argon2i password lock.
+     * The main Argon2id password lock.
      *
      * @var PasswordLock
      */

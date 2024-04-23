@@ -31,14 +31,14 @@ class PasswordLockTest extends WPTestCase
     }
 
     /** @test */
-    public function it_hashes_with_argon2i()
+    public function it_hashes_with_argon2id()
     {
         $passwordLock = new PasswordLock(self::DUMMY_PEPPER, []);
 
         $ciphertext = $passwordLock->hash(self::DUMMY_PASSWORD);
 
         $this->assertFalse(
-            password_needs_rehash($ciphertext, PASSWORD_ARGON2I, WP_PASSWORD_ARGON_TWO_OPTIONS)
+            password_needs_rehash($ciphertext, PASSWORD_ARGON2ID, WP_PASSWORD_ARGON_TWO_OPTIONS)
         );
     }
 

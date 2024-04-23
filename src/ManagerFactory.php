@@ -31,7 +31,7 @@ class ManagerFactory
 
     private static function ensurePHPCompiledWithPasswordArgonTwo(): void
     {
-        if (defined('PASSWORD_ARGON2I')) {
+        if (defined('PASSWORD_ARGON2ID')) {
             return;
         }
 

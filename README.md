@@ -8,7 +8,7 @@
 [![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://typist.tech/donate/wp-password-argon-two/)
 [![Hire Typist Tech](https://img.shields.io/badge/Hire-Typist%20Tech-ff69b4.svg)](https://typist.tech/contact/)
 
-Securely store WordPress user passwords in database with Argon2i hashing and SHA-512 HMAC using PHP's native functions.
+Securely store WordPress user passwords in database with Argon2id hashing and SHA-512 HMAC using PHP's native functions.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -29,7 +29,7 @@ Securely store WordPress user passwords in database with Argon2i hashing and SHA
     - [Option B - Use Environment Variables](#option-b---use-environment-variables)
 - [Usage](#usage)
   - [Pepper Migration](#pepper-migration)
-  - [Argon2i Options](#argon2i-options)
+  - [Argon2id Options](#argon2id-options)
 - [Uninstallation](#uninstallation)
 - [Frequently Asked Questions](#frequently-asked-questions)
   - [What have you done with the passwords?](#what-have-you-done-with-the-passwords)
@@ -39,7 +39,7 @@ Securely store WordPress user passwords in database with Argon2i hashing and SHA
   - [What if my pepper is compromised?](#what-if-my-pepper-is-compromised)
   - [Is pepper-ing perfect?](#is-pepper-ing-perfect)
   - [Is WordPress' phpass hasher or Bcrypt insecure?](#is-wordpress-phpass-hasher-or-bcrypt-insecure)
-  - [Why use Argon2i over the others?](#why-use-argon2i-over-the-others)
+  - [Why use Argon2id over the others?](#why-use-argon2id-over-the-others)
   - [Does this plugin has 72-character limit like Bcrypt?](#does-this-plugin-has-72-character-limit-like-bcrypt)
   - [It looks awesome. Where can I find some more goodies like this?](#it-looks-awesome-where-can-i-find-some-more-goodies-like-this)
   - [This plugin isn't on wp.org. Where can I give a :star::star::star::star::star: review?](#this-plugin-isnt-on-wporg-where-can-i-give-a-starstarstarstarstar-review)
@@ -60,18 +60,18 @@ Securely store WordPress user passwords in database with Argon2i hashing and SHA
 
 ## Goal
 
-Replace WordPress' [phpass](http://openwall.com/phpass) hasher with Argon2i hashing and SHA-512 HMAC.
+Replace WordPress' [phpass](http://openwall.com/phpass) hasher with Argon2id hashing and SHA-512 HMAC.
 
 Adopted from [Mozilla secure coding guidelines](https://wiki.mozilla.org/WebAppSec/Secure_Coding_Guidelines#Password_Storage):
 
-* Passwords stored in a database should using the hmac+argon2i function.
+* Passwords stored in a database should using the hmac+argon2id function.
 
-The purpose of HMAC and Argon2i storage is as follows:
+The purpose of HMAC and Argon2id storage is as follows:
 
-* Argon2i provides a hashing mechanism which can be configured to consume sufficient time to prevent brute forcing of hash values even with many computers
-* Argon2i can be easily adjusted at any time to increase the amount of work and thus provide protection against more powerful systems
-* The nonce(pepper) for the HMAC value is designed to be stored on the file system and not in the databases storing the password hashes. In the event of a compromise of hash values due to SQL injection, the nonce(pepper) will still be an unknown value since it would not be compromised from the file system. This significantly increases the complexity of brute forcing the compromised hashes considering both Argon2i and a large unknown nonce(pepper) value
-* The HMAC operation is simply used as a secondary defense in the event there is a design weakness with Argon2i that could leak information about the password or aid an attacker
+* Argon2id provides a hashing mechanism which can be configured to consume sufficient time to prevent brute forcing of hash values even with many computers
+* Argon2id can be easily adjusted at any time to increase the amount of work and thus provide protection against more powerful systems
+* The nonce(pepper) for the HMAC value is designed to be stored on the file system and not in the databases storing the password hashes. In the event of a compromise of hash values due to SQL injection, the nonce(pepper) will still be an unknown value since it would not be compromised from the file system. This significantly increases the complexity of brute forcing the compromised hashes considering both Argon2id and a large unknown nonce(pepper) value
+* The HMAC operation is simply used as a secondary defense in the event there is a design weakness with Argon2id that could leak information about the password or aid an attacker
 
 ## Magic Moments
 
@@ -88,7 +88,7 @@ WP Password Argon Two just works when:
 
   user passwords were hashed with Bcrypt
 
-* changing Argon2i options
+* changing Argon2id options
 
 * using new pepper while moving the old ones into `WP_PASSWORD_ARGON_TWO_FALLBACK_PEPPERS`
 
@@ -111,11 +111,11 @@ To check whether PHP is compiled with Argon2:
 ```bash
 # Good: Compiled with Argon2
 ➜ php -r 'print_r(get_defined_constants());' | grep -i argon
-    [PASSWORD_ARGON2I] => 2
+    [PASSWORD_ARGON2ID] => 2
     [PASSWORD_ARGON2_DEFAULT_MEMORY_COST] => 1024
     [PASSWORD_ARGON2_DEFAULT_TIME_COST] => 2
     [PASSWORD_ARGON2_DEFAULT_THREADS] => 2
-    [SODIUM_CRYPTO_PWHASH_ALG_ARGON2I13] => 1
+    [SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13] => 1
     [SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13] => 2
     [SODIUM_CRYPTO_PWHASH_STRPREFIX] => $argon2id$
 ```
@@ -204,7 +204,7 @@ define('WP_PASSWORD_ARGON_TWO_FALLBACK_PEPPERS', [
 
 During the next user login, his/her password will be rehashed with `new-pepper`.
 
-### Argon2i Options
+### Argon2id Options
 
 > Due to the variety of platforms PHP runs on, the cost factors are deliberately set low as to not accidentally exhaust system resources on shared or low resource systems when using the default cost parameters. Consequently, users should adjust the cost factors to match the system they're working on. As Argon2 doesn't have any "bad" values, however consuming more resources is considered better than consuming less. Users are encouraged to adjust the cost factors for the platform they're developing for.
 >
@@ -234,7 +234,7 @@ In a nutshell:
 ```php
 password_hash(
     hash_hmac('sha512', $userPassword, WP_PASSWORD_ARGON_TWO_PEPPER),
-    PASSWORD_ARGON2I,
+    PASSWORD_ARGON2ID,
     WP_PASSWORD_ARGON_TWO_OPTIONS
 );
 ```
@@ -283,11 +283,11 @@ Both WordPress' [phpass](http://openwall.com/phpass) hasher and Bcrypt are secur
 
 Learn more about the [reasons](https://roots.io/wordpress-password-security-follow-up/) about not using WordPress' default.
 
-### Why use Argon2i over the others?
+### Why use Argon2id over the others?
 
 Argon2 password-based key derivation function is the winner of the [Password Hashing Competition](https://password-hashing.net) in July 2015, ranked better than Bcrypt and PBKDF2.
 
-Argon2 comes with 3 different modes: Argon2d, Argon2i, Argon2id. Argon2i is the one for password hashing. See: https://crypto.stackexchange.com/a/49969
+Argon2 comes with 3 different modes: Argon2d, Argon2id, Argon2id. Argon2id is the one for password hashing. See: https://crypto.stackexchange.com/a/49969
 
 ### Does this plugin has 72-character limit like Bcrypt?
 

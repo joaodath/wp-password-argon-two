@@ -1,12 +1,12 @@
 {
     "name": "typisttech/wp-password-argon-two",
-    "description": "Securely store WordPress user passwords in database with Argon2i hashing and SHA-512 HMAC using PHP's native functions.",
+    "description": "Securely store WordPress user passwords in database with Argon2id hashing and SHA-512 HMAC using PHP's native functions.",
     "keywords": [
         "wordpress",
         "wp",
         "password",
         "argon2",
-        "argon2i",
+        "argon2id",
         "sha512",
         "hashing",
         "hmac"

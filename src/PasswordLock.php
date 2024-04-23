@@ -6,7 +6,7 @@ namespace TypistTech\WPPasswordArgonTwo;
 
 class PasswordLock extends Validator
 {
-    private const PASSWORD_HASH_ALGO = PASSWORD_ARGON2I;
+    private const PASSWORD_HASH_ALGO = PASSWORD_ARGON2ID;
 
     /**
      * Password hash options.
@@ -19,7 +19,7 @@ class PasswordLock extends Validator
      * PasswordLock constructor.
      *
      * @param string $pepper  Shared secret key used for generating the HMAC variant of the message digest.
-     * @param array  $options Password hash options for Argon2i.
+     * @param array  $options Password hash options for Argon2id.
      */
     public function __construct(string $pepper, array $options)
     {

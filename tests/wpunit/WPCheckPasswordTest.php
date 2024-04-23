@@ -11,10 +11,10 @@ class WPCheckPasswordTest extends WPTestCase
     private const DUMMY_PASSWORD = 'password';
 
     // Pepper is defined in TypistTech\WPPasswordArgonTwo\Helper\Wpunit.
-    private const ARGON_TWO_HASH = '$argon2i$v=19$m=1024,t=2,p=2$NHE3Vm5aeE8vRExBcVpieA$hf23XqOpqT403Ya0U+Bd+4JhYlMAgNEvFx/CisPkrX4';
-    private const ARGON_TWO_OUTDATED_OPTIONS_HASH = '$argon2i$v=19$m=131072,t=4,p=3$c3drNFJrU21EcjNESUw4ZQ$KboA2MZFKh/O0UEl6T8eMLeEihbWKY6Efeu9TRkbdJM';
+    private const ARGON_TWO_HASH = '$argon2id$v=19$m=1024,t=2,p=2$NHE3Vm5aeE8vRExBcVpieA$hf23XqOpqT403Ya0U+Bd+4JhYlMAgNEvFx/CisPkrX4';
+    private const ARGON_TWO_OUTDATED_OPTIONS_HASH = '$argon2id$v=19$m=131072,t=4,p=3$c3drNFJrU21EcjNESUw4ZQ$KboA2MZFKh/O0UEl6T8eMLeEihbWKY6Efeu9TRkbdJM';
     // Fallback pepper is 'my-second-pepper';
-    private const ARGON_TWO_FALLBACK_PEPPER_HASH = '$argon2i$v=19$m=1024,t=2,p=2$TUFxYm5XSkJ1b29YLmI5Mg$qn5gHvOEVi1Ixenu7Uax8VWMwu5JW6mM0Ob/kJBwB2A';
+    private const ARGON_TWO_FALLBACK_PEPPER_HASH = '$argon2id$v=19$m=1024,t=2,p=2$TUFxYm5XSkJ1b29YLmI5Mg$qn5gHvOEVi1Ixenu7Uax8VWMwu5JW6mM0Ob/kJBwB2A';
     private const BCRYPT_HASH = '$2y$10$EkVBmTI0cbPvPdnTYeVk8eIt6qpHk09C8DB5iZwHbYBu5ot2PyAnq';
     private const MD5_HASH = '5f4dcc3b5aa765d61d8327deb882cf99';
     private const PHPASS_HASH = '$P$BasW5IPx2SEVGbVdiIEzx2VrRb/.eF0';
@@ -34,7 +34,7 @@ class WPCheckPasswordTest extends WPTestCase
     /** @test */
     public function it_does_not_rehash_argon2_hash()
     {
-        $this->assertRehashToArgon2i('argon2user', self::DUMMY_PASSWORD, self::ARGON_TWO_HASH);
+        $this->assertRehashToArgon2id('argon2user', self::DUMMY_PASSWORD, self::ARGON_TWO_HASH);
         $user = get_user_by('login', 'argon2user');
         $this->assertSame(
             self::ARGON_TWO_HASH,
@@ -57,7 +57,7 @@ class WPCheckPasswordTest extends WPTestCase
     /** @test */
     public function it_rehash_argon2_outdated_options_hash()
     {
-        $this->assertRehashToArgon2i('argon2_outdated_options_user', self::DUMMY_PASSWORD, self::ARGON_TWO_OUTDATED_OPTIONS_HASH);
+        $this->assertRehashToArgon2id('argon2_outdated_options_user', self::DUMMY_PASSWORD, self::ARGON_TWO_OUTDATED_OPTIONS_HASH);
         $user = get_user_by('login', 'argon2_outdated_options_user');
         $this->assertNotSame(
             self::ARGON_TWO_OUTDATED_OPTIONS_HASH,
@@ -80,7 +80,7 @@ class WPCheckPasswordTest extends WPTestCase
     /** @test */
     public function it_rehash_argon2_fallback_pepper_hash()
     {
-        $this->assertRehashToArgon2i('argon2fallbackpepperuser', self::DUMMY_PASSWORD, self::ARGON_TWO_FALLBACK_PEPPER_HASH);
+        $this->assertRehashToArgon2id('argon2fallbackpepperuser', self::DUMMY_PASSWORD, self::ARGON_TWO_FALLBACK_PEPPER_HASH);
         $user = get_user_by('login', 'argon2fallbackpepperuser');
         $this->assertNotSame(
             self::ARGON_TWO_FALLBACK_PEPPER_HASH,
@@ -103,7 +103,7 @@ class WPCheckPasswordTest extends WPTestCase
     /** @test */
     public function it_rehash_bcrypt_hash()
     {
-        $this->assertRehashToArgon2i('bcrypt_user', self::DUMMY_PASSWORD, self::BCRYPT_HASH);
+        $this->assertRehashToArgon2id('bcrypt_user', self::DUMMY_PASSWORD, self::BCRYPT_HASH);
     }
 
     /** @test */
@@ -121,7 +121,7 @@ class WPCheckPasswordTest extends WPTestCase
     /** @test */
     public function it_rehash_md5_hash()
     {
-        $this->assertRehashToArgon2i('md5_user', self::DUMMY_PASSWORD, self::MD5_HASH);
+        $this->assertRehashToArgon2id('md5_user', self::DUMMY_PASSWORD, self::MD5_HASH);
     }
 
     /** @test */
@@ -139,7 +139,7 @@ class WPCheckPasswordTest extends WPTestCase
     /** @test */
     public function it_rehash_phpass_hash()
     {
-        $this->assertRehashToArgon2i('phpass_user', self::DUMMY_PASSWORD, self::PHPASS_HASH);
+        $this->assertRehashToArgon2id('phpass_user', self::DUMMY_PASSWORD, self::PHPASS_HASH);
     }
 
     private function assertCorrectPassword(string $login, string $password, string $ciphertext)
@@ -160,7 +160,7 @@ class WPCheckPasswordTest extends WPTestCase
         $this->assertFalse($isValid);
     }
 
-    private function assertRehashToArgon2i(string $login, string $password, string $ciphertext)
+    private function assertRehashToArgon2id(string $login, string $password, string $ciphertext)
     {
         $this->haveUserInDatabase($login, $ciphertext);
         $user = get_user_by('login', $login);
@@ -169,7 +169,7 @@ class WPCheckPasswordTest extends WPTestCase
 
         $user = get_user_by('login', $login);
         $this->assertFalse(
-            password_needs_rehash($user->user_pass, PASSWORD_ARGON2I, WP_PASSWORD_ARGON_TWO_OPTIONS)
+            password_needs_rehash($user->user_pass, PASSWORD_ARGON2ID, WP_PASSWORD_ARGON_TWO_OPTIONS)
         );
     }
 
